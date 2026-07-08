@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Doar+{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#006e2f",
+        "primary-container": "#22c55e",
+        "on-primary-container": "#004b1e",
+        "on-primary": "#ffffff",
+        "primary-fixed": "#6bff8f",
+        "on-primary-fixed": "#002109",
+        "secondary": "#0051d5",
+        "secondary-container": "#316bf3",
+        "on-secondary": "#ffffff",
+        "on-surface": "#141b2b",
+        "on-surface-variant": "#3d4a3d",
+        "on-background": "#141b2b",
+        "background": "#f9f9ff",
+        "surface": "#f9f9ff",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f1f3ff",
+        "surface-container": "#e9edff",
+        "surface-container-high": "#e1e8fd",
+        "surface-container-highest": "#dce2f7",
+        "outline": "#6d7b6c",
+        "outline-variant": "#bccbb9",
+        "error": "#ba1a1a",
+        "error-container": "#ffdad6",
+        "on-error-container": "#93000a",
+        "tertiary": "#5c5f60"
+      },
+      spacing: { md: "24px", gutter: "24px", "container-max": "1280px", lg: "48px", xl: "80px", xs: "4px", sm: "12px", base: "8px" },
+      fontFamily: { sans: ["Inter", "sans-serif"] }
+    }
+  }
+}
+</script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(229,231,235,0.5); }
+    body { padding-bottom: 76px; }
+    @media (min-width: 768px) { body { padding-bottom: 0; } }
+</style>
+</head>
+<body class="bg-background text-on-background font-sans min-h-screen">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-50 bg-surface-container-lowest shadow-sm">
+    <nav class="flex justify-between items-center px-gutter py-3 max-w-container-max mx-auto">
+        <a href="{{ url_for('home') }}" class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+            <span class="font-extrabold text-xl text-primary">Doar+</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6">
+            <a href="{{ url_for('home') }}" class="font-medium text-sm {{ 'text-primary' if request.endpoint=='home' else 'text-on-surface-variant hover:text-primary' }} transition-colors">Home</a>
+            <a href="{{ url_for('feed') }}" class="font-medium text-sm {{ 'text-primary' if request.endpoint=='feed' else 'text-on-surface-variant hover:text-primary' }} transition-colors">Feed</a>
+            <a href="{{ url_for('recompensas') }}" class="font-medium text-sm {{ 'text-primary' if request.endpoint=='recompensas' else 'text-on-surface-variant hover:text-primary' }} transition-colors">Recompensas</a>
+            {% if current_user %}
+            <a href="{{ url_for('perfil') }}" class="font-medium text-sm {{ 'text-primary' if request.endpoint=='perfil' else 'text-on-surface-variant hover:text-primary' }} transition-colors">Perfil</a>
+            {% if current_user['is_admin'] %}
+            <a href="{{ url_for('admin') }}" class="font-medium text-sm {{ 'text-primary' if request.endpoint=='admin' else 'text-on-surface-variant hover:text-primary' }} transition-colors">Admin</a>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="flex items-center gap-3">
+            {% if current_user %}
+                <a href="{{ url_for('publicar') }}" class="hidden sm:flex items-center gap-1 bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-bold hover:opacity-90 transition-opacity">
+                    <span class="material-symbols-outlined text-[18px]">add</span> Doar
+                </a>
+                <a href="{{ url_for('perfil') }}" class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-sm">
+                    {{ current_user['name'][0]|upper }}
+                </a>
+                <a href="{{ url_for('logout') }}" class="text-on-surface-variant hover:text-error text-sm font-medium hidden md:inline">Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="text-on-surface-variant text-sm font-medium hover:text-primary">Entrar</a>
+                <a href="{{ url_for('cadastro') }}" class="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-bold hover:opacity-90 transition-opacity">Cadastrar</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="max-w-container-max mx-auto px-gutter pt-4">
+        {% for message in messages %}
+        <div class="bg-primary/10 border border-primary/20 text-primary px-4 py-3 rounded-xl mb-2 text-sm font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">info</span> {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- BottomNavBar (mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-lowest border-t border-outline-variant/30 shadow-[0px_-4px_10px_0px_rgba(0,0,0,0.05)] py-2 px-2 flex justify-around items-center">
+    <a href="{{ url_for('home') }}" class="flex flex-col items-center px-3 py-1 {{ 'text-primary' if request.endpoint=='home' else 'text-on-surface-variant' }}">
+        <span class="material-symbols-outlined" style="{{ 'font-variation-settings: \'FILL\' 1;' if request.endpoint=='home' else '' }}">home</span>
+        <span class="text-[10px] font-bold">Home</span>
+    </a>
+    <a href="{{ url_for('feed') }}" class="flex flex-col items-center px-3 py-1 {{ 'text-primary' if request.endpoint=='feed' else 'text-on-surface-variant' }}">
+        <span class="material-symbols-outlined" style="{{ 'font-variation-settings: \'FILL\' 1;' if request.endpoint=='feed' else '' }}">search</span>
+        <span class="text-[10px] font-bold">Feed</span>
+    </a>
+    <a href="{{ url_for('publicar') if current_user else url_for('login') }}" class="flex flex-col items-center px-3 py-1 text-primary-container">
+        <span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+    </a>
+    <a href="{{ url_for('recompensas') }}" class="flex flex-col items-center px-3 py-1 {{ 'text-primary' if request.endpoint=='recompensas' else 'text-on-surface-variant' }}">
+        <span class="material-symbols-outlined" style="{{ 'font-variation-settings: \'FILL\' 1;' if request.endpoint=='recompensas' else '' }}">redeem</span>
+        <span class="text-[10px] font-bold">Rewards</span>
+    </a>
+    <a href="{{ url_for('perfil') if current_user else url_for('login') }}" class="flex flex-col items-center px-3 py-1 {{ 'text-primary' if request.endpoint=='perfil' else 'text-on-surface-variant' }}">
+        <span class="material-symbols-outlined" style="{{ 'font-variation-settings: \'FILL\' 1;' if request.endpoint=='perfil' else '' }}">person</span>
+        <span class="text-[10px] font-bold">Perfil</span>
+    </a>
+</nav>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

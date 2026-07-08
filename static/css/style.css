@@ -1,0 +1,7 @@
+/* Ajustes finos que o Tailwind (via CDN) não cobre por padrão */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+/* Esconde a barra de rolagem horizontal dos filtros de categoria, mantendo a rolagem */
+.overflow-x-auto::-webkit-scrollbar { display: none; }

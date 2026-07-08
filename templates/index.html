@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Doe Agora — Transforme Vidas{% endblock %}
+
+{% block content %}
+<header class="hero">
+    <nav class="navbar">
+        <div class="logo">💙 Doe<span>Agora</span></div>
+        <a href="#form-doacao" class="btn btn-nav">Quero doar</a>
+    </nav>
+
+    <div class="hero-content">
+        <h1>Sua doação muda uma <span class="highlight">história real</span></h1>
+        <p class="hero-subtitle">
+            Estamos arrecadando fundos para apoiar famílias em situação de vulnerabilidade.
+            Cada contribuição, de qualquer valor, faz diferença.
+        </p>
+        <a href="#form-doacao" class="btn btn-primary btn-large">Fazer uma doação</a>
+    </div>
+</header>
+
+<main>
+    <!-- Barra de progresso da campanha -->
+    <section class="progresso-section">
+        <div class="container">
+            <div class="progresso-card">
+                <div class="progresso-header">
+                    <div>
+                        <span class="progresso-label">Arrecadado</span>
+                        <h2 class="progresso-valor">R$ {{ "%.2f"|format(total_arrecadado)|replace(".", ",") }}</h2>
+                    </div>
+                    <div class="progresso-meta-box">
+                        <span class="progresso-label">Meta</span>
+                        <h3>R$ {{ "%.2f"|format(meta)|replace(".", ",") }}</h3>
+                    </div>
+                </div>
+
+                <div class="barra-progresso-bg">
+                    <div class="barra-progresso-fill" style="width: {{ progresso }}%;"></div>
+                </div>
+
+                <div class="progresso-footer">
+                    <span>{{ progresso }}% da meta atingida</span>
+                    <span>{{ total_doadores }} doador(es)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário de doação -->
+    <section id="form-doacao" class="form-section">
+        <div class="container form-container">
+            <div class="form-info">
+                <h2>Faça sua doação</h2>
+                <p>Preencha os dados abaixo. Você pode escolher um valor sugerido ou digitar um valor personalizado.</p>
+                <ul class="beneficios">
+                    <li>✅ 100% do valor destinado à campanha</li>
+                    <li>✅ Você recebe uma confirmação na hora</li>
+                    <li>✅ Seus dados nunca serão compartilhados</li>
+                </ul>
+            </div>
+
+            <form class="card-form" action="/doar" method="POST">
+                <label class="field-label">Escolha um valor</label>
+                <div class="valores-rapidos">
+                    <button type="button" class="valor-btn" data-valor="20">R$ 20</button>
+                    <button type="button" class="valor-btn" data-valor="50">R$ 50</button>
+                    <button type="button" class="valor-btn" data-valor="100">R$ 100</button>
+                    <button type="button" class="valor-btn" data-valor="200">R$ 200</button>
+                </div>
+
+                <label class="field-label" for="valor">Ou digite outro valor (R$)</label>
+                <input type="number" min="1" step="0.01" name="valor" id="valor" placeholder="Ex: 75.00" required>
+
+                <label class="field-label" for="nome">Seu nome</label>
+                <input type="text" name="nome" id="nome" placeholder="Nome completo" required>
+
+                <label class="field-label" for="email">Seu e-mail</label>
+                <input type="email" name="email" id="email" placeholder="seu@email.com" required>
+
+                <label class="field-label" for="mensagem">Mensagem (opcional)</label>
+                <textarea name="mensagem" id="mensagem" rows="3" placeholder="Deixe uma mensagem de apoio..."></textarea>
+
+                <button type="submit" class="btn btn-primary btn-full">Confirmar doação 💙</button>
+                <p class="disclaimer">* Este é um projeto de demonstração e não processa pagamentos reais.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Mural de apoiadores -->
+    {% if ultimas_doacoes %}
+    <section class="mural-section">
+        <div class="container">
+            <h2>Últimos apoiadores</h2>
+            <div class="mural-grid">
+                {% for doacao in ultimas_doacoes %}
+                <div class="mural-card">
+                    <div class="mural-avatar">{{ doacao["nome"][0]|upper }}</div>
+                    <div>
+                        <strong>{{ doacao["nome"] }}</strong>
+                        <span class="mural-valor">doou R$ {{ "%.2f"|format(doacao["valor"])|replace(".", ",") }}</span>
+                        {% if doacao["mensagem"] %}
+                        <p class="mural-mensagem">"{{ doacao["mensagem"] }}"</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+<footer class="footer">
+    <p>Feito com 💙 para ensinar Flask + UI/UX. Projeto educacional.</p>
+</footer>
+{% endblock %}

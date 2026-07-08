@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Doar+ | Recompensas{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto px-gutter py-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold mb-1">Suas Recompensas</h1>
+            <p class="text-on-surface-variant">Transforme seu impacto social em benefícios exclusivos.</p>
+        </div>
+        {% if current_user %}
+        <div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl shadow-sm flex items-center gap-3">
+            <div class="bg-primary-container/10 p-2 rounded-full">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+            </div>
+            <div>
+                <p class="text-xs text-on-surface-variant uppercase tracking-wider">Seu saldo</p>
+                <p class="font-bold text-primary">{{ current_user['points'] }} pts</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {% for r in recompensas %}
+        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30">
+            <div class="h-32 bg-secondary/10 flex items-center justify-center relative">
+                <span class="material-symbols-outlined text-secondary text-4xl">redeem</span>
+                <span class="absolute top-3 left-3 bg-secondary-container text-white px-3 py-1 rounded-full text-xs">{{ r['category'] }}</span>
+            </div>
+            <div class="p-5">
+                <h3 class="font-bold mb-1">{{ r['name'] }}</h3>
+                <p class="text-on-surface-variant text-sm mb-4">{{ r['description'] }}</p>
+                <div class="flex items-center justify-between">
+                    <span class="flex items-center gap-1 font-bold text-primary text-sm">
+                        <span class="material-symbols-outlined text-[18px]">token</span> {{ r['cost_points'] }} pts
+                    </span>
+                    {% if current_user %}
+                    <form action="{{ url_for('resgatar', reward_id=r['id']) }}" method="POST">
+                        <button type="submit" class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity {% if current_user['points'] < r['cost_points'] %}opacity-50{% endif %}">
+                            Resgatar
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="text-secondary text-sm font-medium hover:underline">Entrar para resgatar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

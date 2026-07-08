@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ item['name'] }} | Doar+{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto px-gutter py-6">
+    <a href="{{ url_for('feed') }}" class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-sm mb-4">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Voltar para o feed
+    </a>
+    <div class="grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7">
+            <div class="aspect-video rounded-2xl bg-primary/10 flex items-center justify-center shadow-sm relative">
+                <span class="material-symbols-outlined text-primary" style="font-size: 100px;">inventory_2</span>
+                <span class="absolute top-4 left-4 bg-primary-container/90 text-on-primary-container px-3 py-1 rounded-full text-sm font-bold">{{ item['category'] }}</span>
+            </div>
+            <div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10 mt-4">
+                <div class="flex justify-between items-start mb-3">
+                    <h1 class="text-2xl font-bold">{{ item['name'] }}</h1>
+                    <span class="flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full text-primary font-bold text-sm">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span> {{ item['points'] }} pts
+                    </span>
+                </div>
+                <p class="text-on-surface-variant leading-relaxed">{{ item['description'] or 'Sem descrição adicional.' }}</p>
+                <div class="mt-6 pt-6 border-t border-surface-container grid grid-cols-2 gap-3">
+                    <div class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-outline text-base">check_circle</span> Condição: {{ item['condition'] }}</div>
+                    <div class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-outline text-base">check_circle</span> Tamanho: {{ item['size'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="lg:col-span-5 space-y-4">
+            <section class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-4">Doador</h3>
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-primary-container/30 flex items-center justify-center font-bold text-lg text-on-primary-container">{{ item['doador'][0]|upper }}</div>
+                    <div>
+                        <h4 class="font-bold">{{ item['doador'] }}</h4>
+                        <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> {{ item['doador_cidade'] or item['city'] or 'Local não informado' }}</p>
+                    </div>
+                </div>
+            </section>
+            <form action="{{ url_for('registrar_interesse', item_id=item['id']) }}" method="POST">
+                <button type="submit" class="w-full py-4 bg-primary-container text-on-primary-container font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg hover:opacity-90 transition-all">
+                    <span class="material-symbols-outlined">volunteer_activism</span> Tenho Interesse
+                </button>
+            </form>
+            {% if not current_user %}
+            <p class="text-xs text-center text-on-surface-variant">Você precisa <a href="{{ url_for('login') }}" class="text-primary font-bold hover:underline">entrar na sua conta</a> para demonstrar interesse.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

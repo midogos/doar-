@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Doar+ Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto px-gutter py-6">
+    <h1 class="text-2xl font-bold mb-1">Painel Administrativo</h1>
+    <p class="text-on-surface-variant mb-8">Revise e aprove as doações publicadas na plataforma.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-outline-variant/20">
+            <div class="p-3 bg-secondary/10 text-secondary rounded-xl inline-block mb-3">
+                <span class="material-symbols-outlined">group</span>
+            </div>
+            <p class="text-on-surface-variant text-sm">Total de Usuários</p>
+            <h3 class="text-3xl font-bold">{{ total_usuarios }}</h3>
+        </div>
+        <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-outline-variant/20">
+            <div class="p-3 bg-error/10 text-error rounded-xl inline-block mb-3">
+                <span class="material-symbols-outlined">pending_actions</span>
+            </div>
+            <p class="text-on-surface-variant text-sm">Doações Pendentes</p>
+            <h3 class="text-3xl font-bold">{{ total_pendentes }}</h3>
+        </div>
+        <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-outline-variant/20">
+            <div class="p-3 bg-primary/10 text-primary rounded-xl inline-block mb-3">
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <p class="text-on-surface-variant text-sm">Doações Aprovadas</p>
+            <h3 class="text-3xl font-bold">{{ total_aprovados }}</h3>
+        </div>
+    </div>
+
+    <section>
+        <h4 class="text-xl font-bold mb-4">Aguardando Aprovação</h4>
+        {% if pendentes %}
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-surface-container-low/50 text-on-surface-variant uppercase text-xs tracking-widest border-b border-outline-variant/10">
+                        <th class="px-6 py-4">Doador</th>
+                        <th class="px-6 py-4">Item</th>
+                        <th class="px-6 py-4">Pontos</th>
+                        <th class="px-6 py-4">Data</th>
+                        <th class="px-6 py-4 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/10">
+                    {% for item in pendentes %}
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary-container/30 flex items-center justify-center text-xs font-bold">{{ item['doador'][0]|upper }}</div>
+                                <span class="text-sm font-bold">{{ item['doador'] }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-sm font-medium">{{ item['name'] }}</span>
+                            <span class="block text-[11px] text-primary uppercase font-bold">{{ item['category'] }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm">{{ item['points'] }} pts</td>
+                        <td class="px-6 py-4 text-sm text-on-surface-variant">{{ item['created_at'][:10] }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-center gap-2">
+                                <form action="{{ url_for('admin_aprovar', item_id=item['id']) }}" method="POST">
+                                    <button class="px-4 py-1.5 bg-primary text-on-primary text-xs font-bold rounded-lg hover:opacity-90 transition-all">Aprovar</button>
+                                </form>
+                                <form action="{{ url_for('admin_recusar', item_id=item['id']) }}" method="POST">
+                                    <button class="px-4 py-1.5 border border-error text-error text-xs font-bold rounded-lg hover:bg-error-container/20 transition-all">Recusar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="bg-surface-container-low rounded-2xl border-2 border-dashed border-outline-variant/30 p-10 text-center text-on-surface-variant">
+            Nenhuma doação aguardando aprovação no momento. ✅
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

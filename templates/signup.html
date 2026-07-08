@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Doar+ | Criar conta{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center px-gutter py-16">
+    <div class="w-full max-w-md bg-surface-container-lowest border border-outline-variant/30 rounded-xl shadow-sm p-8">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold">Crie sua conta</h1>
+            <p class="text-on-surface-variant text-sm">Junte-se à revolução do bem com o Doar+.</p>
+        </div>
+        <form method="POST" class="flex flex-col gap-4">
+            <div>
+                <label class="text-xs font-medium text-on-surface-variant block mb-1">Nome completo</label>
+                <input type="text" name="name" required class="w-full h-12 px-4 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="Como você quer ser chamado?">
+            </div>
+            <div>
+                <label class="text-xs font-medium text-on-surface-variant block mb-1">E-mail</label>
+                <input type="email" name="email" required class="w-full h-12 px-4 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="exemplo@email.com">
+            </div>
+            <div>
+                <label class="text-xs font-medium text-on-surface-variant block mb-1">Senha</label>
+                <input type="password" name="password" required minlength="6" class="w-full h-12 px-4 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="Mínimo 6 caracteres">
+            </div>
+            <button type="submit" class="w-full h-12 bg-primary-container text-on-primary-container font-bold rounded-lg hover:opacity-90 transition-all mt-2">Cadastrar</button>
+        </form>
+        <p class="text-center text-sm text-on-surface-variant mt-6">
+            Já tenho conta? <a href="{{ url_for('login') }}" class="text-primary font-bold hover:underline">Entrar agora</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

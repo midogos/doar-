@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Doar+ | Nova Doação{% endblock %}
+
+{% block content %}
+<div class="max-w-container-max mx-auto px-gutter py-6">
+    <h1 class="text-2xl font-bold mb-1">O que você vai doar hoje?</h1>
+    <p class="text-on-surface-variant mb-6">Preencha os detalhes para que possamos encontrar um novo lar para o seu item.</p>
+
+    <form method="POST" class="grid lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-8 space-y-5">
+            <section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/20">
+                <h2 class="font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-primary">info</span> Informações Básicas</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-medium text-on-surface-variant block mb-1">Nome do item</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" placeholder="Ex: Cadeira de Escritório Ergonômica">
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-medium text-on-surface-variant block mb-1">Categoria</label>
+                            <select name="category" required class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none bg-white transition-all">
+                                {% for cat in categorias %}<option value="{{ cat }}">{{ cat }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-medium text-on-surface-variant block mb-1">Condição</label>
+                            <select name="condition" required class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none bg-white transition-all">
+                                {% for cond in condicoes %}<option value="{{ cond }}">{{ cond }}</option>{% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/20">
+                <h2 class="font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-primary">description</span> Descrição</h2>
+                <textarea name="description" rows="5" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all resize-none" placeholder="Descreva o estado do item, dimensões e qualquer detalhe importante..."></textarea>
+            </section>
+        </div>
+
+        <aside class="lg:col-span-4">
+            <div class="sticky top-24 space-y-4">
+                <section class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-primary/10">
+                    <h3 class="font-bold mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-primary">stars</span> Impacto e Pontos</h3>
+                    <p class="text-on-surface-variant text-sm mb-4">Selecione o tamanho para estimar seus pontos.</p>
+                    <div class="space-y-2">
+                        {% for tamanho, pts in pontos_tamanho.items() %}
+                        <label class="flex justify-between items-center p-3 rounded-lg border border-outline-variant/20 cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-primary/5 transition-all">
+                            <span class="flex items-center gap-2 text-sm font-medium">
+                                <input type="radio" name="size" value="{{ tamanho }}" {% if loop.first %}checked{% endif %} class="text-primary focus:ring-primary">
+                                {{ tamanho }}
+                            </span>
+                            <span class="bg-primary/10 text-primary px-2 py-0.5 rounded font-bold text-xs">{{ pts }} pts</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <p class="text-[11px] mt-3 text-on-surface-variant">Itens "Novo" ou "Seminovo" ganham +50 pontos de bônus.</p>
+                </section>
+                <button type="submit" class="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">rocket_launch</span> Publicar Doação
+                </button>
+            </div>
+        </aside>
+    </form>
+</div>
+{% endblock %}
